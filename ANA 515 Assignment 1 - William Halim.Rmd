@@ -1,0 +1,74 @@
+---
+title: "ANA 515 Assignment 1"
+author: "William Halim"
+date: '2022'
+output: 
+    html_document:
+      theme:
+        bootswatch: minty
+---
+
+```{r setup, include=FALSE}
+#install.packages("tidyverse")
+#install.packages("knitr")
+#install.packages("bslib")
+
+library(tidyverse)
+library(knitr)
+library(bslib)
+```
+
+## R Markdown
+
+```{r get data, include=FALSE}
+url <- 'https://raw.githubusercontent.com/fivethirtyeight/guns-data/master/full_data.csv'
+gun_deaths <- read_csv(url)
+glimpse(gun_deaths)
+```
+
+```{r data manipulation, include=FALSE}
+youth <- gun_deaths %>%
+  filter(age <= 65)
+summary(youth)
+```
+
+```{r, echo=FALSE}
+#This next chunk is inline code. Inline code puts the text with the output of the function in my document.
+```
+
+We have data about 'r nrow(gun_deaths)' individuals killed by guns. Only 'r nrow(gun_deaths) - nrow(youth)' are older than 65. The distribution of the remainder is shown below:
+
+#Gun deaths by age
+```{r youth-dist, echo=FALSE}
+library(ggplot2)
+youth %>%
+  ggplot(aes(age))+geom_freqpoly(binwidth = 1)
+```
+
+#Gun deaths by race
+```{r race-dist, echo=FALSE}
+youth %>%
+  ggplot(aes(fct_infreq(race) %>% fct_rev())) + geom_bar() + coord_flip() + labs(x = "Victim race")
+```
+
+```{r, echo=FALSE}
+#Once all of my code has been written, I click on the Knit button in the tool bar above to produce my document.
+```
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
